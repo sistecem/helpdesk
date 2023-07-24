@@ -24,16 +24,17 @@ class ResPartner(models.Model):
 
     def _compute_helpdesk_ticket_count(self):
         for record in self:
-            ticket_ids = self.env["helpdesk.ticket"].search(
-                [("partner_id", "child_of", record.id)]
-            )
-            record.helpdesk_ticket_count = len(ticket_ids)
-            record.helpdesk_ticket_active_count = len(
-                ticket_ids.filtered(lambda ticket: not ticket.stage_id.closed)
-            )
-            count_active = record.helpdesk_ticket_active_count
-            count = record.helpdesk_ticket_count
-            record.helpdesk_ticket_count_string = "{} / {}".format(count_active, count)
+            if id != 'New Id':
+                ticket_ids = self.env["helpdesk.ticket"].search(
+                    [("partner_id", "child_of", record.id)]
+                )
+                record.helpdesk_ticket_count = len(ticket_ids)
+                record.helpdesk_ticket_active_count = len(
+                    ticket_ids.filtered(lambda ticket: not ticket.stage_id.closed)
+                )
+                count_active = record.helpdesk_ticket_active_count
+                count = record.helpdesk_ticket_count
+                record.helpdesk_ticket_count_string = "{} / {}".format(count_active, count)
 
     def action_view_helpdesk_tickets(self):
         return {
