@@ -1,5 +1,6 @@
 from odoo import fields, models
-
+import logging
+_logger = logging.getLogger(__name__)
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
@@ -23,8 +24,8 @@ class ResPartner(models.Model):
     )
 
     def _compute_helpdesk_ticket_count(self):
-        for record in self:
-            if id != 'New Id':
+        try:
+            for record in self:
                 ticket_ids = self.env["helpdesk.ticket"].search(
                     [("partner_id", "child_of", record.id)]
                 )
@@ -35,6 +36,8 @@ class ResPartner(models.Model):
                 count_active = record.helpdesk_ticket_active_count
                 count = record.helpdesk_ticket_count
                 record.helpdesk_ticket_count_string = "{} / {}".format(count_active, count)
+        except:
+            _logger.info("Error , no se puede con la nueva id, actualizar OCB")
 
     def action_view_helpdesk_tickets(self):
         return {
